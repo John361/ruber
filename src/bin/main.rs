@@ -8,7 +8,7 @@ async fn main() -> anyhow::Result<()> {
 
     for route in &config.routes.routes {
         let mut driver = Driver::new(route);
-        driver.take("toto.txt");
+        driver.take_passenger("toto.txt");
         driver.drive()?;
     }
 

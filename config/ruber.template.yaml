@@ -33,24 +33,24 @@ routes:
                   password: "password"
 
 
-    # From local to remote ssh using keys with local archive
+    # From remote ssh using keys to local with local archive
     - name: "From local to remote ssh using keys with local archive"
       source:
-        Local:
-          name: "My source3 folder"
-          folder: "/tmp/ruber/source3"
+        Remote:
+          Ssh:
+            name: "My remote3 folder"
+            address: "my.remote.net"
+            port: 22
+            folder: "/remote3"
+            credentials:
+              Key:
+                username: "user"
+                private_key: "/tmp/ruber/keys/user"
 
       destinations:
-        - Remote:
-            Ssh:
-              name: "My remote3 folder"
-              address: "my.remote.net"
-              port: 22
-              folder: "/remote3"
-              credentials:
-                Key:
-                  username: "user"
-                  private_key: "/tmp/ruber/keys/user"
+        - Local:
+            name: "My source3 folder"
+            folder: "/tmp/ruber/source3"
 
         - Local:
             name: "My archive3 folder"
