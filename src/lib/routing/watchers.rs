@@ -1,6 +1,8 @@
+use std::path::PathBuf;
+
 use serde::Deserialize;
 
-use crate::routing::RemoteSshCredentials;
+use crate::routing::RemoteCredentials;
 
 #[derive(Debug, Deserialize)]
 pub enum Watch {
@@ -10,8 +12,8 @@ pub enum Watch {
 
 #[derive(Debug, Deserialize)]
 pub struct LocalWatch {
-    pub name: String,
-    pub folder: String,
+    name: String,
+    folder: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -21,9 +23,53 @@ pub enum RemoteWatch {
 
 #[derive(Debug, Deserialize)]
 pub struct RemoteSsh {
-    pub name: String,
-    pub address: String,
-    pub port: u16,
-    pub folder: String,
-    pub credentials: RemoteSshCredentials,
+    name: String,
+    address: String,
+    port: u16,
+    folder: String,
+    credentials: RemoteCredentials,
+}
+
+impl Watch {
+    pub fn name(&self) -> &str {
+        match &self {
+            Watch::Local(local) => {
+                &local.name
+            }
+
+            Watch::Remote(remote) => {
+                match remote {
+                    RemoteWatch::Ssh(ssh) => {
+                        &ssh.name
+                    }
+                }
+            }
+        }
+    }
+
+    pub fn folder(&self) -> PathBuf {
+        match &self {
+            Watch::Local(local) => {
+                PathBuf::from(&local.folder)
+            }
+
+            Watch::Remote(remote) => {
+                match remote {
+                    RemoteWatch::Ssh(ssh) => {
+                        PathBuf::from(&ssh.folder)
+                    }
+                }
+            }
+        }
+    }
+}
+
+impl RemoteWatch {
+    pub fn credentials(&self) -> &RemoteCredentials {
+        match &self {
+            RemoteWatch::Ssh(ssh) => {
+                &ssh.credentials
+            }
+        }
+    }
 }

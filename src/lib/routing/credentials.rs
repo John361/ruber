@@ -13,7 +13,7 @@ pub struct RemoteCredentialsKey {
 }
 
 #[derive(Debug, Deserialize)]
-pub enum RemoteSshCredentials {
+pub enum RemoteCredentials {
     Password(RemoteCredentialsPassword),
     Key(RemoteCredentialsKey),
 }
