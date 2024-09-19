@@ -1,4 +1,5 @@
 use std::fmt;
+use std::io::Read;
 
 use crate::driving::TransportTrait;
 
@@ -11,7 +12,15 @@ impl RemoteTransport {
 }
 
 impl TransportTrait for RemoteTransport {
-    fn drive_with(&self) {
+    fn read(&self) -> anyhow::Result<Box<dyn Read>> {
+        todo!()
+    }
+
+    fn write(&self, _reader: &mut Box<dyn Read>) -> anyhow::Result<()> {
+        todo!()
+    }
+
+    fn content_type(&self) -> anyhow::Result<String> {
         todo!()
     }
 }
