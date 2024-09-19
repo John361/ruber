@@ -1,7 +1,7 @@
 use std::path::PathBuf;
 
-use crate::driving::{LocalTransport, RemoteTransport, TransportTrait};
-use crate::routing::{Route, Watch};
+use crate::driving::{LocalTransport, RemoteSshTransport, TransportTrait};
+use crate::routing::{RemoteWatch, Route, Watch};
 
 pub struct Driver<'a> {
     route: &'a Route,
@@ -25,7 +25,7 @@ impl<'a> Driver<'a> {
     }
 
     fn take_appropriate_transport_to_passenger(&mut self) {
-        match self.route.source {
+        match &self.route.source {
             Watch::Local(_) => {
                 let mut source = self.route.source.folder();
                 source.push(&self.passenger.clone().unwrap());
@@ -35,8 +35,14 @@ impl<'a> Driver<'a> {
                 )))
             }
 
-            Watch::Remote(_) => {
-                self.transport_a = Some(Box::new(RemoteTransport::new()))
+            Watch::Remote(remote) => {
+                match remote {
+                    RemoteWatch::Ssh(_) => {
+                        let address = remote.address().to_string();
+                        let credentials = remote.credentials();
+                        self.transport_a = Some(Box::new(RemoteSshTransport::new(address, credentials)));
+                    }
+                }
             }
         }
     }
@@ -52,8 +58,14 @@ impl<'a> Driver<'a> {
                 )))
             }
 
-            Watch::Remote(_) => {
-                self.transport_b = Some(Box::new(RemoteTransport::new()))
+            Watch::Remote(remote) => {
+                match remote {
+                    RemoteWatch::Ssh(_) => {
+                        let address = remote.address().to_string();
+                        let credentials = remote.credentials().clone();
+                        self.transport_b = Some(Box::new(RemoteSshTransport::new(address, credentials)));
+                    }
+                }
             }
         }
     }

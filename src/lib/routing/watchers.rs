@@ -65,10 +65,18 @@ impl Watch {
 }
 
 impl RemoteWatch {
-    pub fn credentials(&self) -> &RemoteCredentials {
+    pub fn address(&self) -> String {
         match &self {
             RemoteWatch::Ssh(ssh) => {
-                &ssh.credentials
+                format!("{}:{}", ssh.address, ssh.port)
+            }
+        }
+    }
+
+    pub fn credentials(&self) -> RemoteCredentials {
+        match &self {
+            RemoteWatch::Ssh(ssh) => {
+                ssh.credentials.clone()
             }
         }
     }
