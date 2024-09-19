@@ -707,6 +707,7 @@ dependencies = [
  "log",
  "log4rs",
  "serde",
+ "thiserror",
  "tokio",
 ]
 
