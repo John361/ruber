@@ -9,6 +9,7 @@ pub struct Routes {
 
 #[derive(Debug, Deserialize)]
 pub struct Route {
+    pub name: String,
     pub source: Watch,
     pub destination: Vec<Watch>,
 }
