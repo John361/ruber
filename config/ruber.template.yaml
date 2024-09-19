@@ -24,7 +24,7 @@ routes:
         - Remote:
             Ssh:
               name: "My remote2 folder"
-              address: "my.remote.net"
+              host: "my.remote.net"
               port: 22
               folder: "/destination2"
               credentials:
@@ -39,7 +39,7 @@ routes:
         Remote:
           Ssh:
             name: "My source3 folder"
-            address: "my.remote.net"
+            host: "my.remote.net"
             port: 22
             folder: "/source3"
             credentials:

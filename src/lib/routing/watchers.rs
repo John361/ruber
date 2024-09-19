@@ -24,7 +24,7 @@ pub enum RemoteWatch {
 #[derive(Debug, Deserialize)]
 pub struct RemoteSsh {
     name: String,
-    address: String,
+    host: String,
     port: u16,
     folder: String,
     credentials: RemoteCredentials,
@@ -65,10 +65,10 @@ impl Watch {
 }
 
 impl RemoteWatch {
-    pub fn address(&self) -> String {
+    pub fn address(&self) -> (String, u16) {
         match &self {
             RemoteWatch::Ssh(ssh) => {
-                format!("{}:{}", ssh.address, ssh.port)
+                (ssh.host.clone(), ssh.port)
             }
         }
     }
