@@ -1,0 +1,57 @@
+routes:
+  routes:
+    # From local to local
+    - name: "From local to local"
+      source:
+        Local:
+          name: "My source1 folder"
+          folder: "/tmp/ruber/source1"
+
+      destinations:
+        - Local:
+            name: "My destination1 folder"
+            folder: "/tmp/ruber/destination1"
+
+
+    # From local to remote ssh using password
+    - name: "From local to remote ssh using password"
+      source:
+        Local:
+          name: "My source2 folder"
+          folder: "/tmp/ruber/source2"
+
+      destinations:
+        - Remote:
+            Ssh:
+              name: "My remote2 folder"
+              address: "my.remote.net"
+              port: 22
+              folder: "/remote2"
+              credentials:
+                Password:
+                  username: "user"
+                  password: "password"
+
+
+    # From local to remote ssh using keys with local archive
+    - name: "From local to remote ssh using keys with local archive"
+      source:
+        Local:
+          name: "My source3 folder"
+          folder: "/tmp/ruber/source3"
+
+      destinations:
+        - Remote:
+            Ssh:
+              name: "My remote3 folder"
+              address: "my.remote.net"
+              port: 22
+              folder: "/remote3"
+              credentials:
+                Key:
+                  username: "user"
+                  private_key: "/tmp/ruber/keys/user"
+
+        - Local:
+            name: "My archive3 folder"
+            folder: "/tmp/ruber/archive3"
