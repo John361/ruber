@@ -1,6 +1,6 @@
 use serde::Deserialize;
 
-use crate::routing::RemoteCredentials;
+use crate::routing::RemoteSshCredentials;
 
 #[derive(Debug, Deserialize)]
 pub enum Watch {
@@ -15,9 +15,15 @@ pub struct LocalWatch {
 }
 
 #[derive(Debug, Deserialize)]
-pub struct RemoteWatch {
+pub enum RemoteWatch {
+    Ssh(RemoteSsh),
+}
+
+#[derive(Debug, Deserialize)]
+pub struct RemoteSsh {
     pub name: String,
     pub address: String,
+    pub port: u16,
     pub folder: String,
-    pub credentials: RemoteCredentials,
+    pub credentials: RemoteSshCredentials,
 }

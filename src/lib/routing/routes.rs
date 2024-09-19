@@ -11,5 +11,5 @@ pub struct Routes {
 pub struct Route {
     pub name: String,
     pub source: Watch,
-    pub destination: Vec<Watch>,
+    pub destinations: Vec<Watch>,
 }
