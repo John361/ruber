@@ -1,11 +1,16 @@
 use ruber_lib::config::RuberConfig;
+use ruber_lib::driving::Driver;
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
     initialize_logger("config/log4rs.yaml")?;
+    let config = load_config("config/ruber.template.yaml")?;
 
-    let config = load_config("config/ruber.template.yaml");
-    println!("{:#?}", config);
+    for route in &config.routes.routes {
+        let mut driver = Driver::new(route);
+        driver.take("toto.txt");
+        driver.drive()?;
+    }
 
     Ok(())
 }
