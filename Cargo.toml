@@ -13,6 +13,7 @@ path = "src/lib/lib.rs"
 
 [dependencies]
 anyhow = "1.0.89"
+async-ssh2-lite = { version = "0.5.0", features = ["tokio"] }
 config = { version = "0.14.0", features = ["yaml"] }
 infer = "0.16.0"
 log = "0.4.22"

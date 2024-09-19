@@ -15,16 +15,18 @@ impl<'a> Driver<'a> {
         Self { route, passenger: None, transport_a: None, transport_b: None }
     }
 
-    pub fn take_passenger(&mut self, file_name: &str) {
+    pub async fn take_passenger(&mut self, file_name: &str) -> anyhow::Result<()> {
         self.passenger = Some(PathBuf::from(file_name));
-        self.take_appropriate_transport_to_passenger();
+        self.take_appropriate_transport_to_passenger().await?;
         log::info!("Passenger {} successfully taken in charge with {} transport",
             self.passenger.as_ref().unwrap().display(),
             self.transport_a.as_ref().unwrap()
         );
+
+        Ok(())
     }
 
-    fn take_appropriate_transport_to_passenger(&mut self) {
+    async fn take_appropriate_transport_to_passenger(&mut self) -> anyhow::Result<()> {
         match &self.route.source {
             Watch::Local(_) => {
                 let mut source = self.route.source.folder();
@@ -32,22 +34,24 @@ impl<'a> Driver<'a> {
                 self.transport_a = Some(Box::new(LocalTransport::new(
                     Some(source),
                     None
-                )))
+                )));
             }
 
             Watch::Remote(remote) => {
                 match remote {
                     RemoteWatch::Ssh(_) => {
-                        let address = remote.address().to_string();
                         let credentials = remote.credentials();
-                        self.transport_a = Some(Box::new(RemoteSshTransport::new(address, credentials)));
+                        let transport = RemoteSshTransport::new(remote.address(), credentials).await?;
+                        self.transport_a = Some(Box::new(transport));
                     }
                 }
             }
         }
+
+        Ok(())
     }
 
-    fn take_appropriate_transport_to_destination(&mut self, destination: &Watch) {
+    async fn take_appropriate_transport_to_destination(&mut self, destination: &Watch) -> anyhow::Result<()> {
         match destination {
             Watch::Local(_) => {
                 let mut source = destination.folder();
@@ -55,24 +59,26 @@ impl<'a> Driver<'a> {
                 self.transport_b = Some(Box::new(LocalTransport::new(
                     None,
                     Some(source)
-                )))
+                )));
             }
 
             Watch::Remote(remote) => {
                 match remote {
                     RemoteWatch::Ssh(_) => {
-                        let address = remote.address().to_string();
                         let credentials = remote.credentials().clone();
-                        self.transport_b = Some(Box::new(RemoteSshTransport::new(address, credentials)));
+                        let transport = RemoteSshTransport::new(remote.address(), credentials).await?;
+                        self.transport_b = Some(Box::new(transport));
                     }
                 }
             }
         }
+
+        Ok(())
     }
 
-    pub fn drive(&mut self) -> anyhow::Result<()> {
+    pub async fn drive(&mut self) -> anyhow::Result<()> {
         for destination in &self.route.destinations {
-            self.take_appropriate_transport_to_destination(destination);
+            self.take_appropriate_transport_to_destination(destination).await?;
             log::info!("Driving passenger from {} to {}...",
                 self.route.source.folder().display(),
                 destination.folder().display()

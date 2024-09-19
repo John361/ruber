@@ -14,8 +14,8 @@ async fn main() -> anyhow::Result<()> {
 
     let route = &config.routes.routes[0];
     let mut driver = Driver::new(route);
-    driver.take_passenger("file1.txt");
-    driver.drive()?;
+    driver.take_passenger("file1.txt").await?;
+    driver.drive().await?;
 
     Ok(())
 }
