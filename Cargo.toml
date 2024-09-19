@@ -1,0 +1,14 @@
+[package]
+name = "ruber"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "ruber"
+path = "src/bin/main.rs"
+
+[lib]
+name = "ruber_lib"
+path = "src/lib/lib.rs"
+
+[dependencies]
