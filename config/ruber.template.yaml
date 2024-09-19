@@ -26,7 +26,7 @@ routes:
               name: "My remote2 folder"
               address: "my.remote.net"
               port: 22
-              folder: "/remote2"
+              folder: "/destination2"
               credentials:
                 Password:
                   username: "user"
@@ -38,10 +38,10 @@ routes:
       source:
         Remote:
           Ssh:
-            name: "My remote3 folder"
+            name: "My source3 folder"
             address: "my.remote.net"
             port: 22
-            folder: "/remote3"
+            folder: "/source3"
             credentials:
               Key:
                 username: "user"
@@ -49,9 +49,9 @@ routes:
 
       destinations:
         - Local:
-            name: "My source3 folder"
-            folder: "/tmp/ruber/source3"
+            name: "My destination3 folder"
+            folder: "/tmp/ruber/destination3"
 
         - Local:
-            name: "My archive3 folder"
-            folder: "/tmp/ruber/archive3"
+            name: "My archive folder"
+            folder: "/tmp/ruber/archives"
