@@ -7,7 +7,7 @@ use crate::routing::Route;
 
 pub async fn start(config: &RuberConfig) -> anyhow::Result<()> {
     for route in &config.routes.routes {
-        listen_for_new_passenger(route).await?;
+        listen_for_new_passenger(route).await?; // TODO: spawn in new thread
     }
 
     Ok(())
