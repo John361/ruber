@@ -4,24 +4,24 @@ use serde::Deserialize;
 
 use crate::routing::RemoteCredentials;
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub enum Watch {
     Local(LocalWatch),
     Remote(RemoteWatch),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct LocalWatch {
     name: String,
     folder: String,
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub enum RemoteWatch {
     Ssh(RemoteSsh),
 }
 
-#[derive(Debug, Deserialize)]
+#[derive(Clone, Debug, Deserialize)]
 pub struct RemoteSsh {
     name: String,
     host: String,
