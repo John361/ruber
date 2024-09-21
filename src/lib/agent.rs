@@ -1,6 +1,6 @@
-use notify::{Config, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
 use notify::event::AccessKind::Close;
 use notify::event::AccessMode::Write;
+use notify::{Config, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
 
 use crate::config::RuberConfig;
 use crate::driving::Driver;
@@ -27,15 +27,15 @@ pub async fn start(config: RuberConfig) -> Result<(), AgentError> {
 
 async fn listen_for_new_passenger(route: &Route) -> Result<(), AgentError> {
     let (tx, rx) = std::sync::mpsc::channel();
-    let mut watcher = RecommendedWatcher::new(tx, Config::default())
-        .map_err(|e| {
-            let error = AgentError::Notify(e);
-            log::error!("AgentError: {:?}", error);
-            error
-        })?;
+    let mut watcher = RecommendedWatcher::new(tx, Config::default()).map_err(|e| {
+        let error = AgentError::Notify(e);
+        log::error!("AgentError: {:?}", error);
+        error
+    })?;
     let folder = &route.source.folder();
 
-    watcher.watch(folder, RecursiveMode::Recursive)
+    watcher
+        .watch(folder, RecursiveMode::Recursive)
         .map_err(|e| {
             let error = AgentError::Notify(e);
             log::error!("AgentError: {:?}", error);
@@ -63,7 +63,11 @@ async fn listen_for_new_passenger(route: &Route) -> Result<(), AgentError> {
             }
 
             Err(error) => {
-                log::error!("Cannot receive passenger from: {}. Error: {}", folder.display(), error);
+                log::error!(
+                    "Cannot receive passenger from: {}. Error: {}",
+                    folder.display(),
+                    error
+                );
             }
         }
     }

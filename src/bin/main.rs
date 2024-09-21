@@ -1,5 +1,5 @@
-use ruber_lib::config::RuberConfig;
 use ruber_lib::agent;
+use ruber_lib::config::RuberConfig;
 use ruber_lib::error::RuberError;
 
 #[tokio::main]

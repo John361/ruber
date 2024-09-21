@@ -1,7 +1,7 @@
-use std::{fmt, io};
 use std::fs::{File, OpenOptions};
 use std::io::{Read, Write};
 use std::path::PathBuf;
+use std::{fmt, io};
 
 use anyhow::Context;
 
@@ -15,11 +15,16 @@ pub struct LocalTransport {
 
 impl LocalTransport {
     pub fn new(source: Option<PathBuf>, destination: Option<PathBuf>) -> Self {
-        Self { source, destination }
+        Self {
+            source,
+            destination,
+        }
     }
 
     fn source_path(&self) -> Result<PathBuf, DrivingError> {
-        let path = self.source.clone()
+        let path = self
+            .source
+            .clone()
             .context("Cannot get source file")
             .map_err(|e| {
                 let error = DrivingError::Unknown(e);
@@ -31,7 +36,9 @@ impl LocalTransport {
     }
 
     fn destination_path(&self) -> Result<PathBuf, DrivingError> {
-        let path = self.destination.clone()
+        let path = self
+            .destination
+            .clone()
             .context("Cannot get destination file")
             .map_err(|e| {
                 let error = DrivingError::Unknown(e);
@@ -46,12 +53,11 @@ impl LocalTransport {
 impl TransportTrait for LocalTransport {
     fn read(&self) -> Result<Box<dyn Read>, DrivingError> {
         let path = self.source_path()?;
-        let file = File::open(path)
-            .map_err(|e| {
-                let error = DrivingError::Io(e);
-                log::error!("DrivingError: {:?}", error);
-                error
-            })?;
+        let file = File::open(path).map_err(|e| {
+            let error = DrivingError::Io(e);
+            log::error!("DrivingError: {:?}", error);
+            error
+        })?;
 
         log::debug!("File successfully opened");
         Ok(Box::new(file))
@@ -70,12 +76,11 @@ impl TransportTrait for LocalTransport {
                 error
             })?;
 
-        io::copy(reader, &mut file)
-            .map_err(|e| {
-                let error = DrivingError::Io(e);
-                log::error!("DrivingError: {:?}", error);
-                error
-            })?;
+        io::copy(reader, &mut file).map_err(|e| {
+            let error = DrivingError::Io(e);
+            log::error!("DrivingError: {:?}", error);
+            error
+        })?;
 
         file.flush().map_err(|e| {
             let error = DrivingError::Io(e);
@@ -89,12 +94,11 @@ impl TransportTrait for LocalTransport {
 
     fn content_type(&self) -> Result<String, DrivingError> {
         let path = self.source_path()?;
-        let source_type = infer::get_from_path(path)
-            .map_err(|e| {
-                let error = DrivingError::Io(e);
-                log::error!("DrivingError: {:?}", error);
-                error
-            })?;
+        let source_type = infer::get_from_path(path).map_err(|e| {
+            let error = DrivingError::Io(e);
+            log::error!("DrivingError: {:?}", error);
+            error
+        })?;
 
         if source_type.is_some() {
             let mime_type = source_type.unwrap().mime_type().to_string();

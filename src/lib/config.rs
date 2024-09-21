@@ -19,13 +19,11 @@ impl RuberConfig {
                 error
             })?;
 
-        let crust_config = config
-            .try_deserialize::<RuberConfig>()
-            .map_err(|e| {
-                let error = RuberError::Config(e);
-                log::error!("RuberError: {:?}", error);
-                error
-            })?;
+        let crust_config = config.try_deserialize::<RuberConfig>().map_err(|e| {
+            let error = RuberError::Config(e);
+            log::error!("RuberError: {:?}", error);
+            error
+        })?;
 
         Ok(crust_config)
     }
