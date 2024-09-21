@@ -7,8 +7,10 @@ pub use remote_transport::*;
 use std::fmt;
 use std::io::Read;
 
+use crate::error::DrivingError;
+
 pub trait TransportTrait: fmt::Display {
-    fn read(&self) -> anyhow::Result<Box<dyn Read>>;
-    fn write(&self, reader: &mut Box<dyn Read>) -> anyhow::Result<()>;
-    fn content_type(&self) -> anyhow::Result<String>;
+    fn read(&self) -> Result<Box<dyn Read>, DrivingError>;
+    fn write(&self, reader: &mut Box<dyn Read>) -> Result<(), DrivingError>;
+    fn content_type(&self) -> Result<String, DrivingError>;
 }
