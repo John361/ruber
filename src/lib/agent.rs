@@ -51,7 +51,7 @@ async fn listen_for_new_passenger(route: &Route) -> Result<(), AgentError> {
                         for path in event.paths {
                             if let Some(path) = path.file_name() {
                                 let file_name = path.to_str().unwrap();
-                                let mut driver = Driver::new(&route);
+                                let mut driver = Driver::new(route);
                                 driver.take_passenger(file_name).await?;
                                 driver.drive().await?;
                             }

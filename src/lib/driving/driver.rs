@@ -32,7 +32,7 @@ impl<'a> Driver<'a> {
         match &self.route.source {
             Watch::Local(_) => {
                 let mut source = self.route.source.folder();
-                source.push(&self.passenger.clone().unwrap());
+                source.push(self.passenger.clone().unwrap());
                 self.transport_a = Some(Box::new(LocalTransport::new(
                     Some(source),
                     None
@@ -57,7 +57,7 @@ impl<'a> Driver<'a> {
         match destination {
             Watch::Local(_) => {
                 let mut source = destination.folder();
-                source.push(&self.passenger.clone().unwrap());
+                source.push(self.passenger.clone().unwrap());
                 self.transport_b = Some(Box::new(LocalTransport::new(
                     None,
                     Some(source)
