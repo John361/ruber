@@ -34,7 +34,7 @@ routes:
 
 
     # From remote ssh using keys to local with local archive
-    - name: "From local to remote ssh using keys with local archive"
+    - name: "From remote ssh using keys to local with local archive"
       source:
         Remote:
           Ssh:

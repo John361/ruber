@@ -9,7 +9,7 @@ use std::io::Read;
 
 use crate::error::DrivingError;
 
-pub trait TransportTrait: fmt::Display {
+pub trait TransportTrait: fmt::Display + Send {
     fn read(&self) -> Result<Box<dyn Read>, DrivingError>;
     fn write(&self, reader: &mut Box<dyn Read>) -> Result<(), DrivingError>;
     fn content_type(&self) -> Result<String, DrivingError>;

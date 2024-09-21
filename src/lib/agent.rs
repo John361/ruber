@@ -7,9 +7,19 @@ use crate::driving::Driver;
 use crate::error::AgentError;
 use crate::routing::Route;
 
-pub async fn start(config: &RuberConfig) -> Result<(), AgentError> {
-    for route in &config.routes.routes {
-        listen_for_new_passenger(route).await?; // TODO: spawn in new thread
+pub async fn start(config: RuberConfig) -> Result<(), AgentError> {
+    let mut tasks = Vec::new();
+
+    for route in config.routes.routes {
+        tasks.push(tokio::task::spawn(async move {
+            listen_for_new_passenger(&route).await
+        }));
+    }
+
+    for task in tasks {
+        if let Err(e) = task.await? {
+            log::error!("Error while listening for new passenger: {:?}", e);
+        }
     }
 
     Ok(())

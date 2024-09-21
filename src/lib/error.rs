@@ -20,6 +20,9 @@ pub enum AgentError {
     #[error("Driving error")]
     Driving(#[from] DrivingError),
 
+    #[error("Join error")]
+    Join(#[from] tokio::task::JoinError),
+
     #[error(transparent)]
     Unknown(#[from] anyhow::Error),
 }

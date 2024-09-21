@@ -7,7 +7,7 @@ async fn main() -> Result<(), RuberError> {
     initialize_logger("config/log4rs.yaml")?;
     let config = load_config("config/ruber.template.yaml")?;
 
-    agent::start(&config).await?;
+    agent::start(config).await?;
     Ok(())
 }
 
