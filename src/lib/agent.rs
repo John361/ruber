@@ -1,5 +1,6 @@
 use notify::{Config, EventKind, RecommendedWatcher, RecursiveMode, Watcher};
-use notify::event::CreateKind;
+use notify::event::AccessKind::Close;
+use notify::event::AccessMode::Write;
 
 use crate::config::RuberConfig;
 use crate::driving::Driver;
@@ -36,7 +37,7 @@ async fn listen_for_new_passenger(route: &Route) -> Result<(), AgentError> {
         match rx.recv() {
             Ok(event) => {
                 if let Ok(event) = event {
-                    if event.kind == EventKind::Create(CreateKind::File) {
+                    if event.kind == EventKind::Access(Close(Write)) {
                         for path in event.paths {
                             if let Some(path) = path.file_name() {
                                 let file_name = path.to_str().unwrap();
@@ -46,7 +47,7 @@ async fn listen_for_new_passenger(route: &Route) -> Result<(), AgentError> {
                             }
                         }
                     } else {
-                        log::debug!("Unmanaged event: {:?}", event.kind);
+                        // log::debug!("Unmanaged event: {:?}", event.kind);
                     }
                 }
             }
