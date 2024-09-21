@@ -1,4 +1,6 @@
 # Ruber
+[![Ruber build](https://github.com/John361/ruber/actions/workflows/build.yml/badge.svg)](https://github.com/John361/ruber/actions/workflows/build.yml)
+[![Ruber release](https://github.com/John361/ruber/actions/workflows/release.yml/badge.svg)](https://github.com/John361/ruber/actions/workflows/release.yml)
 
 ## Dev help for folders creation
 ```shell
