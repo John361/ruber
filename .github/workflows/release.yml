@@ -1,5 +1,4 @@
 name: Ruber release
-
 on:
   push:
     tags:
@@ -31,6 +30,6 @@ jobs:
       - name: Upload assets
         uses: taiki-e/upload-rust-binary-action@v1
         with:
-          bin: r-uber
+          bin: ruber
           token: ${{ secrets.GITHUB_TOKEN }}
           asset: README.md
