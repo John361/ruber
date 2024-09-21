@@ -1,6 +1,6 @@
-use anyhow::Context;
 use serde::Deserialize;
 
+use crate::error::RuberError;
 use crate::routing::Routes;
 
 #[derive(Debug, Deserialize)]
@@ -9,15 +9,23 @@ pub struct RuberConfig {
 }
 
 impl RuberConfig {
-    pub fn load(config_file: &str) -> anyhow::Result<Self> {
+    pub fn load(config_file: &str) -> Result<Self, RuberError> {
         let config = config::Config::builder()
             .add_source(config::File::with_name(config_file))
             .build()
-            .context(format!("Failed to build config from {0}", config_file))?;
+            .map_err(|e| {
+                let error = RuberError::Config(e);
+                log::error!("RuberError: {:?}", error);
+                error
+            })?;
 
         let crust_config = config
             .try_deserialize::<RuberConfig>()
-            .context("Failed to deserialize into RuberConfig")?;
+            .map_err(|e| {
+                let error = RuberError::Config(e);
+                log::error!("RuberError: {:?}", error);
+                error
+            })?;
 
         Ok(crust_config)
     }

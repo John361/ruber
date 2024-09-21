@@ -2,12 +2,24 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum RuberError {
+    #[error("Agent error")]
+    Agent(#[from] AgentError),
+
+    #[error("Config error")]
+    Config(#[from] config::ConfigError),
+
     #[error(transparent)]
     Unknown(#[from] anyhow::Error),
 }
 
 #[derive(Debug, Error)]
 pub enum AgentError {
+    #[error("Notify error")]
+    Notify(#[from] notify::Error),
+
+    #[error("Driving error")]
+    Driving(#[from] DrivingError),
+
     #[error(transparent)]
     Unknown(#[from] anyhow::Error),
 }
