@@ -1,6 +1,8 @@
 use std::path::PathBuf;
+use anyhow::Context;
 
 use crate::driving::{LocalTransport, RemoteSshTransport, TransportTrait};
+use crate::error::DrivingError;
 use crate::routing::{RemoteWatch, Route, Watch};
 
 pub struct Driver<'a> {
@@ -15,7 +17,7 @@ impl<'a> Driver<'a> {
         Self { route, passenger: None, transport_a: None, transport_b: None }
     }
 
-    pub async fn take_passenger(&mut self, file_name: &str) -> anyhow::Result<()> {
+    pub async fn take_passenger(&mut self, file_name: &str) -> Result<(), DrivingError> {
         self.passenger = Some(PathBuf::from(file_name));
         self.take_appropriate_transport_to_passenger().await?;
         log::info!("Passenger {} successfully taken in charge with {} transport",
@@ -26,7 +28,7 @@ impl<'a> Driver<'a> {
         Ok(())
     }
 
-    async fn take_appropriate_transport_to_passenger(&mut self) -> anyhow::Result<()> {
+    async fn take_appropriate_transport_to_passenger(&mut self) -> Result<(), DrivingError> {
         match &self.route.source {
             Watch::Local(_) => {
                 let mut source = self.route.source.folder();
@@ -51,7 +53,7 @@ impl<'a> Driver<'a> {
         Ok(())
     }
 
-    async fn take_appropriate_transport_to_destination(&mut self, destination: &Watch) -> anyhow::Result<()> {
+    async fn take_appropriate_transport_to_destination(&mut self, destination: &Watch) -> Result<(), DrivingError> {
         match destination {
             Watch::Local(_) => {
                 let mut source = destination.folder();
@@ -76,7 +78,7 @@ impl<'a> Driver<'a> {
         Ok(())
     }
 
-    pub async fn drive(&mut self) -> anyhow::Result<()> {
+    pub async fn drive(&mut self) -> Result<(), DrivingError> {
         for destination in &self.route.destinations {
             self.take_appropriate_transport_to_destination(destination).await?;
             log::info!("Driving passenger from {} to {}...",
@@ -84,8 +86,22 @@ impl<'a> Driver<'a> {
                 destination.folder().display()
             );
 
-            let transport_a = self.transport_a.take().unwrap();
-            let transport_b = self.transport_b.take().unwrap();
+            let transport_a = self.transport_a.take()
+                .context("Cannot take transport a")
+                .map_err(|e| {
+                    let error = DrivingError::Unknown(e);
+                    log::error!("DrivingError: {:?}", error);
+                    error
+                })?;
+
+            let transport_b = self.transport_b.take()
+                .context("Cannot take transport b")
+                .map_err(|e| {
+                    let error = DrivingError::Unknown(e);
+                    log::error!("DrivingError: {:?}", error);
+                    error
+                })?;
+
             let mut content = transport_a.read()?;
             transport_b.write(&mut content)?;
 
