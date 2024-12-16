@@ -6,12 +6,9 @@
 ```shell
 rm -rf /tmp/ruber
 mkdir -p /tmp/ruber
-mkdir -p /tmp/ruber/source1
-mkdir -p /tmp/ruber/destination1
-mkdir -p /tmp/ruber/source2
-mkdir -p /tmp/ruber/destination2
-mkdir -p /tmp/ruber/source3
-mkdir -p /tmp/ruber/destination3
+mkdir -p /tmp/ruber/{source1,destination1}
+mkdir -p /tmp/ruber/{source2,destination2}
+mkdir -p /tmp/ruber/{source3,destination3}
 mkdir -p /tmp/ruber/archives
 
 mkdir -p /tmp/ruber/keys
