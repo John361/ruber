@@ -100,9 +100,11 @@ impl TransportTrait for LocalTransport {
             error
         })?;
 
-        if source_type.is_some() {
-            let mime_type = source_type.unwrap().mime_type().to_string();
-            log::debug!("Mime-type detected: {}", &mime_type);
+        if source_type.is_some()
+            && let Some(mime_type) = source_type
+        {
+            let mime_type = mime_type.mime_type().to_string();
+            log::debug!("Mime-type detected: {}", mime_type);
             Ok(mime_type)
         } else {
             log::warn!("No mime-type detected");
